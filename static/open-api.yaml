@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api-v1
+    description: API v1
+paths:
+  /:
+    get:
+      summary: Nombre de liens
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Créer un lien
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+      responses:
+        '201':
+          description: Créé
