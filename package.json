@@ -1,0 +1,26 @@
+{
+  "name": "devweb-tp6",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server.mjs",
+    "prod": "cross-env NODE_ENV=production node server.mjs",
+    "format": "prettier --write \"**/*.mjs\""
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.10.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "morgan": "^1.10.0",
+    "nanoid": "^5.0.7",
+    "serve-favicon": "^2.5.0",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  }
+}
