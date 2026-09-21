@@ -8,10 +8,19 @@ import apiV1 from './router/api-v1.mjs';
 import apiV2 from './router/api-v2.mjs';
 
 const app = express();
+
+// Configuration Express
+app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// Middlewares
+// Middleware pour ajouter X-API-version
+app.use((req, res, next) => {
+    res.setHeader('X-API-version', '2.0.0');
+    next();
+});
+
+// Autres middlewares
 app.use(morgan(LOG_LEVEL));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

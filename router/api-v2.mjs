@@ -41,11 +41,15 @@ router.post('/', (req, res) => {
                 if (++attempts > 10) return res.status(500).json({ error: 'Erreur' });
             } while (db.prepare('SELECT 1 FROM links WHERE url = ?').get(shortUrl));
 
-            db.prepare('INSERT INTO links (url, origin) VALUES (?, ?)').run(shortUrl, url);
+            const secret = nanoid();
+            db.prepare('INSERT INTO links (url, origin, secret) VALUES (?, ?, ?)')
+              .run(shortUrl, url, secret);
+
             res.status(201).json({
                 url: shortUrl,
                 origin: url,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                secret
             });
         },
         'text/html': () => {
@@ -65,7 +69,10 @@ router.post('/', (req, res) => {
                 if (++attempts > 10) return res.status(500).render('root', { count, error: 'Erreur' });
             } while (db.prepare('SELECT 1 FROM links WHERE url = ?').get(shortUrl));
 
-            db.prepare('INSERT INTO links (url, origin) VALUES (?, ?)').run(shortUrl, url);
+            const secret = nanoid();
+            db.prepare('INSERT INTO links (url, origin, secret) VALUES (?, ?, ?)')
+              .run(shortUrl, url, secret);
+
             res.status(201).render('root', {
                 count: count + 1,
                 shortUrl,
@@ -90,6 +97,7 @@ router.get('/:url', (req, res) => {
             origin: row.origin,
             created_at: row.created_at,
             visits: row.visits
+            // ⚠️ PAS de secret ici !
         }),
         'text/html': () => {
             db.prepare('UPDATE links SET visits = visits + 1 WHERE url = ?').run(req.params.url);
@@ -97,6 +105,27 @@ router.get('/:url', (req, res) => {
         },
         default: () => res.status(406).json({ error: 'Not Acceptable' })
     });
+});
+
+router.delete('/:url', (req, res) => {
+    const db = getDatabase();
+    const row = db.prepare('SELECT * FROM links WHERE url = ?').get(req.params.url);
+
+    if (!row) {
+        return res.status(404).json({ error: 'Lien introuvable' });
+    }
+
+    const apiKey = req.header('X-API-Key');
+    if (!apiKey) {
+        return res.status(401).json({ error: 'Clé API manquante' });
+    }
+
+    if (apiKey !== row.secret) {
+        return res.status(403).json({ error: 'Clé API invalide' });
+    }
+
+    db.prepare('DELETE FROM links WHERE url = ?').run(req.params.url);
+    res.status(200).json({ message: 'Lien supprimé' });
 });
 
 export default router;

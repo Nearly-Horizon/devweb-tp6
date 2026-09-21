@@ -1,17 +1,24 @@
 openapi: 3.0.3
 info:
   title: URL Shortener API
-  version: 1.0.0
+  version: 2.0.0
 servers:
-  - url: http://localhost:8080/api-v1
-    description: API v1
+  - url: http://localhost:8080/api-v2
+    description: API v2
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
 paths:
   /:
     get:
       summary: Nombre de liens
       responses:
-        '200':
-          description: OK
+        '200': { description: OK }
     post:
       summary: Créer un lien
       requestBody:
@@ -21,8 +28,31 @@ paths:
             schema:
               type: object
               properties:
-                url:
-                  type: string
+                url: { type: string }
       responses:
-        '201':
-          description: Créé
+        '201': { description: Créé }
+  /{url}:
+    get:
+      summary: Infos ou redirection
+      parameters:
+        - in: path
+          name: url
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+        '404': { description: Introuvable }
+    delete:
+      summary: Supprimer un lien
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: url
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Supprimé }
+        '401': { description: Non authentifié }
+        '403': { description: Interdit }
+        '404': { description: Introuvable }
