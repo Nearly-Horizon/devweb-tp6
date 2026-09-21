@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réducteur d'URL (client)</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; }
+        input, button { padding: 0.5rem; font-size: 1rem; }
+        input { width: 70%; }
+        .result { margin-top: 1rem; padding: 1rem; background: #f0f0f0; border-radius: 4px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Réducteur d'URL</h1>
+    <form id="submit-link">
+        <label for="url">Entrez L'URL pour le réduire</label><br>
+        <input name="url" id="url" type="url" placeholder="https://perdu.com" required />
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
