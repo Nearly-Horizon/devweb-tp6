@@ -57,13 +57,30 @@ router.get('/error', (req, res) => {
     throw new Error('Erreur volontaire pour les tests');
 });
 
-// Routes non implémentées
+// GET /status/:url
 router.get('/status/:url', (req, res) => {
-    res.status(501).json({ error: 'Not Implemented' });
+    const db = getDatabase();
+    const row = db.prepare('SELECT * FROM links WHERE url = ?').get(req.params.url);
+    if (!row) {
+        return res.status(404).json({ error: 'Lien introuvable' });
+    }
+    res.json({
+        url: row.url,
+        origin: row.origin,
+        created_at: row.created_at,
+        visits: row.visits
+    });
 });
 
+// GET /:url — redirection
 router.get('/:url', (req, res) => {
-    res.status(501).json({ error: 'Not Implemented' });
+    const db = getDatabase();
+    const row = db.prepare('SELECT * FROM links WHERE url = ?').get(req.params.url);
+    if (!row) {
+        return res.status(404).json({ error: 'Lien introuvable' });
+    }
+    db.prepare('UPDATE links SET visits = visits + 1 WHERE url = ?').run(req.params.url);
+    res.redirect(row.origin);
 });
 
 export default router;
