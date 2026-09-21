@@ -5,8 +5,11 @@ import YAML from 'yamljs';
 import { PORT, LOG_LEVEL, NODE_ENV } from './config.mjs';
 import { openDatabase, closeDatabase } from './database/database.mjs';
 import apiV1 from './router/api-v1.mjs';
+import apiV2 from './router/api-v2.mjs';
 
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 // Middlewares
 app.use(morgan(LOG_LEVEL));
@@ -20,6 +23,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapi));
 
 // Routes API v1
 app.use('/api-v1', apiV1);
+
+// Routes API v2
+app.use('/api-v2', apiV2);
 
 // Gestion des erreurs
 app.use((err, req, res, next) => {
