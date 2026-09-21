@@ -1,25 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Réducteur d'URL (client)</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; }
-        input, button { padding: 0.5rem; font-size: 1rem; }
-        input { width: 70%; }
-        .result { margin-top: 1rem; padding: 1rem; background: #f0f0f0; border-radius: 4px; }
-        .error { color: red; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Réducteur d'URL — Client</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
     <h1>Réducteur d'URL</h1>
-    <form id="submit-link">
-        <label for="url">Entrez L'URL pour le réduire</label><br>
-        <input name="url" id="url" type="url" placeholder="https://perdu.com" required />
-        <button type="submit">Submit</button>
-    </form>
-    <div id="result"></div>
+    <p class="subtitle">
+      Client AJAX — API v2
+      <span class="count" id="link-count" hidden>0 liens</span>
+    </p>
+  </header>
 
-    <script src="app.js"></script>
+  <main class="card">
+    <form id="submit-link" novalidate>
+      <div class="field">
+        <label for="url">Entrez l'URL à réduire</label>
+        <input
+          name="url"
+          id="url"
+          type="url"
+          placeholder="https://perdu.com"
+          autocomplete="url"
+          spellcheck="false"
+          required
+        />
+      </div>
+      <button type="submit" id="submit-btn">Réduire l'URL</button>
+    </form>
+
+    <div id="result" aria-live="polite"></div>
+  </main>
+
+  <footer>
+    <a href="/api-docs">Documentation API</a>
+    <span class="sep">·</span>
+    <a href="/api-v2/" target="_blank" rel="noopener">API v2 (HTML)</a>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>

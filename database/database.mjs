@@ -1,35 +1,35 @@
-import Database from 'better-sqlite3';
-import fs from 'node:fs';
-import path from 'node:path';
-import { DB_FILE, DB_SCHEMA } from '../config.mjs';
+import Database from "better-sqlite3";
+import fs from "node:fs";
+import path from "node:path";
+import { DB_FILE, DB_SCHEMA } from "../config.mjs";
 
 let db;
 
 export function openDatabase() {
-    if (db) return db;
+  if (db) return db;
 
-    const dir = path.dirname(DB_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  const dir = path.dirname(DB_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    const isNew = !fs.existsSync(DB_FILE);
+  const isNew = !fs.existsSync(DB_FILE);
 
-    db = new Database(DB_FILE);
+  db = new Database(DB_FILE);
 
-    if (isNew) {
-        const schema = fs.readFileSync(DB_SCHEMA, 'utf8');
-        db.exec(schema);
-    }
-    return db;
+  if (isNew) {
+    const schema = fs.readFileSync(DB_SCHEMA, "utf8");
+    db.exec(schema);
+  }
+  return db;
 }
 
 export function closeDatabase() {
-    if (db) {
-        db.close();
-        db = null;
-    }
+  if (db) {
+    db.close();
+    db = null;
+  }
 }
 
 export function getDatabase() {
-    if (!db) openDatabase();
-    return db;
+  if (!db) openDatabase();
+  return db;
 }
